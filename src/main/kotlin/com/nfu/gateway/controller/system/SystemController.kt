@@ -1,4 +1,4 @@
-package com.service.gateway.controller.system
+package com.nfu.gateway.controller.system
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.context.config.annotation.RefreshScope

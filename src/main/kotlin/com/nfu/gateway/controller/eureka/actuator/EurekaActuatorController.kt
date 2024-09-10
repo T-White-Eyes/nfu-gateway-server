@@ -1,4 +1,4 @@
-package com.service.gateway.controller.eureka.actuator
+package com.nfu.gateway.controller.eureka.actuator
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.RequestMapping
