@@ -56,7 +56,7 @@ class JwtFilter(
     }
 
     private fun extractToken(authorizationHeader: String): String {
-        if (authorizationHeader.isNullOrBlank() || authorizationHeader.startsWithNot(JwtPrefix.BEARER)) {
+        if (authorizationHeader.isBlank() || authorizationHeader.startsWithNot(JwtPrefix.BEARER)) {
             throw ApiException(ApiError.UNAUTHORIZED)
         }
 
@@ -64,7 +64,7 @@ class JwtFilter(
     }
 
     private fun extractAuthorizationHeader(request: ServerHttpRequest): String {
-        return request.headers[HttpHeaders.AUTHORIZATION]?.getOrNull(0)
+        return request.headers[HttpHeaders.AUTHORIZATION]?.firstOrNull()
             ?: throw ApiException(ApiError.UNAUTHORIZED)
     }
 
