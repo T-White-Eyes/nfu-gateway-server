@@ -2,8 +2,8 @@ package com.nfu.gateway.filter.jwt
 
 import com.nfu.gateway.constant.header.HeaderName
 import com.nfu.gateway.constant.jwt.JwtPrefix
-import com.nfu.gateway.exception.ApiException
-import com.nfu.gateway.exception.constant.ApiError
+import com.nfu.gateway.exception.GatewayException
+import com.nfu.gateway.exception.constant.GatewayError
 import com.nfu.gateway.util.jwt.JwtPayloadParser
 import com.nfu.gateway.util.jwt.JwtVerifier
 import com.nfu.gateway.util.startsWithNot
@@ -65,13 +65,13 @@ class JwtFilter(
 
     private fun verifyToken(token: String) {
         if (jwtVerifier.isUnverified(token)) {
-            throw ApiException(ApiError.UNAUTHORIZED)
+            throw GatewayException(GatewayError.UNAUTHORIZED)
         }
     }
 
     private fun extractToken(authorizationHeader: String): String {
         if (authorizationHeader.isBlank() || authorizationHeader.startsWithNot(JwtPrefix.BEARER)) {
-            throw ApiException(ApiError.UNAUTHORIZED)
+            throw GatewayException(GatewayError.UNAUTHORIZED)
         }
 
         return authorizationHeader.substring(JwtPrefix.BEARER.length)
@@ -79,7 +79,7 @@ class JwtFilter(
 
     private fun extractAuthorizationHeader(request: ServerHttpRequest): String {
         return request.headers[HttpHeaders.AUTHORIZATION]?.firstOrNull()
-            ?: throw ApiException(ApiError.UNAUTHORIZED)
+            ?: throw GatewayException(GatewayError.UNAUTHORIZED)
     }
 
     /**
