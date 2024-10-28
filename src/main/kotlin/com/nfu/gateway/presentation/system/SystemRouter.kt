@@ -10,9 +10,11 @@ import org.springframework.web.reactive.function.server.ServerResponse
 class SystemRouter {
 
     @Bean
-    fun route(systemHandler: SystemHandler): RouterFunction<ServerResponse> {
+    fun routeSystem(systemHandler: SystemHandler): RouterFunction<ServerResponse> {
         return RouterFunctions.route()
-            .GET("/api/v1/health-check", systemHandler::checkHealth)
+            .path("/api/v1") { builder ->
+                builder.GET("/health-check", systemHandler::checkHealth)
+            }
             .build()
     }
 }
