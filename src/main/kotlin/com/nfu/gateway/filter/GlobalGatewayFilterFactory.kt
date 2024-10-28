@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono
  * @since v1.0.0
  */
 @Component
-class GlobalFilter: AbstractGatewayFilterFactory<GlobalFilter.Config>(Config::class.java) {
+class GlobalGatewayFilterFactory: AbstractGatewayFilterFactory<GlobalGatewayFilterFactory.Config>(Config::class.java) {
 
     private val logger = KotlinLogging.logger {}
 

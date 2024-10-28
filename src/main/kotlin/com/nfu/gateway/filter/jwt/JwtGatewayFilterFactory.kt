@@ -21,10 +21,10 @@ import org.springframework.stereotype.Component
  * @since v1.0.0
  */
 @Component
-class JwtFilter(
+class JwtGatewayFilterFactory(
     private val jwtValidator: JwtValidator,
     private val jwtPayloadParser: JwtPayloadParser,
-): AbstractGatewayFilterFactory<JwtFilter.Config>(Config::class.java) {
+): AbstractGatewayFilterFactory<JwtGatewayFilterFactory.Config>(Config::class.java) {
 
     private val logger = KotlinLogging.logger {}
 
