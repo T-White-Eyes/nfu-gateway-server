@@ -1,11 +1,14 @@
 package com.nfu.gateway.filter
 
+import com.nfu.gateway.constant.header.HeaderName
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory
+import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.stereotype.Component
 
 import reactor.core.publisher.Mono
+import java.util.UUID
 
 /**
  * Gateway Global Filter
@@ -28,18 +31,34 @@ class GlobalFilter: AbstractGatewayFilterFactory<GlobalFilter.Config>(Config::cl
         return GatewayFilter { exchange, chain ->
             val request = exchange.request
             val response = exchange.response
+            val requestId = UUID.randomUUID().toString()
 
             if (config.isPreLogger) {
-                logger.info { "[${config.baseMessage}] Start" }
-                logger.info { "[${config.baseMessage}] Request Information: [${request.method} | ${request.uri}]" }
+                logger.info { "[$requestId] [${config.baseMessage}] Start" }
+                logger.info { "[$requestId] [${config.baseMessage}] Request Information: [${request.method} | ${request.uri}]" }
             }
 
-            return@GatewayFilter chain.filter(exchange)
+            val modifiedExchange = addNfuRequestIdHeader(request, requestId)
+                .let { modifiedRequest ->
+                    exchange
+                        .mutate()
+                        .request(modifiedRequest)
+                        .build()
+                }
+
+            return@GatewayFilter chain.filter(modifiedExchange)
                 .then(Mono.fromRunnable {
                     if (config.isPostLogger) {
-                        logger.info { "[${config.baseMessage}] End, Response Status Code: ${response.statusCode}" }
+                        logger.info { "[$requestId] [${config.baseMessage}] End, Response Status Code: ${response.statusCode}" }
                     }
                 })
         }
+    }
+
+    private fun addNfuRequestIdHeader(request: ServerHttpRequest, nfuRequestId: String): ServerHttpRequest {
+        return request
+            .mutate()
+            .header(HeaderName.NFU_REQUEST_ID, nfuRequestId)
+            .build()
     }
 }
