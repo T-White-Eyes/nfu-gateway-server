@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class JwtValidator(
+class JwtVerifier(
     private val jwtPayloadParser: JwtPayloadParser
 ) {
 
     private val logger = KotlinLogging.logger {}
 
-    fun isValid(token: String): Boolean {
+    fun isVerified(token: String): Boolean {
         return try {
             val now = Date()
             val payload = jwtPayloadParser.parse(token)
@@ -27,7 +27,7 @@ class JwtValidator(
         }
     }
 
-    fun isInvalid(token: String): Boolean {
-        return !isValid(token)
+    fun isUnverified(token: String): Boolean {
+        return !isVerified(token)
     }
 }
