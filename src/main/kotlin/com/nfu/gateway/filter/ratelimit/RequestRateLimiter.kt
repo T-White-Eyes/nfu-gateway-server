@@ -1,7 +1,7 @@
 package com.nfu.gateway.filter.ratelimit
 
-import com.nfu.gateway.exception.ApiException
-import com.nfu.gateway.exception.constant.ApiError
+import com.nfu.gateway.exception.GatewayException
+import com.nfu.gateway.exception.constant.GatewayError
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
 @Component
-class RequestRateLimitGatewayFilterFactory(
+class RequestRateLimiter(
     private val rateLimiter: RateLimiter<RedisRateLimiter.Config>,
-): AbstractGatewayFilterFactory<RequestRateLimitGatewayFilterFactory.Config>(Config::class.java) {
+): AbstractGatewayFilterFactory<RequestRateLimiter.Config>(Config::class.java) {
 
     class Config(
         val keyResolver: KeyResolver,
@@ -38,7 +38,7 @@ class RequestRateLimitGatewayFilterFactory(
                 .flatMap { rateLimitResponse ->
                     when (rateLimitResponse.isAllowed) {
                         true -> chain.filter(exchange)
-                        false -> return@flatMap Mono.error(ApiException(ApiError.TOO_MANY_REQUESTS))
+                        false -> return@flatMap Mono.error(GatewayException(GatewayError.TOO_MANY_REQUESTS))
                     }
                 }
         }
