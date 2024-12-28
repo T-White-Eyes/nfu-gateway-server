@@ -5,6 +5,8 @@ object Version {
 	const val NETFLIX_EUREKA_CLIENT_VERSION = "4.1.3"
 	const val SPRING_BOOT_VERSION = "3.3.3"
 	const val JWT_VERSION = "0.12.6"
+	const val KOTLIN_LOGGING = "7.0.0"
+	const val SPRING_DATA_REDIS_REACTIVE = "3.3.5"
 }
 
 plugins {
@@ -45,7 +47,10 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:${Version.JWT_VERSION}")
 	implementation("io.jsonwebtoken:jjwt-jackson:${Version.JWT_VERSION}")
 
-	implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
+	implementation("io.github.oshai:kotlin-logging-jvm:${Version.KOTLIN_LOGGING}")
+
+	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive:${Version.SPRING_DATA_REDIS_REACTIVE}")
+
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test:${Version.SPRING_BOOT_VERSION}")
 }
